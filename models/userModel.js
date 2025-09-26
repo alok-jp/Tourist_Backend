@@ -44,19 +44,13 @@ const userSchema = new mongoose.Schema({
     idType:  { type: String, enum: ['Passport', 'Aadhaar', 'Voter ID', 'Driving License'], required: true },
     idNumber: { type: String, required: true },
     idDocumentFront: {
-      fileName: { type: String },
       fileUrl:  { type: String },
-      fileType: { type: String }
     },
     idDocumentBack: {
-      fileName: { type: String },
       fileUrl:  { type: String },
-      fileType: { type: String }
     },
     selfieWithID: {
-      fileName: { type: String },
       fileUrl:  { type: String },
-      fileType: { type: String }
     }
   },
 
@@ -69,7 +63,6 @@ const userSchema = new mongoose.Schema({
   },
 
   // Security
-  passwordHash:    { type: String, required: true },  // Hash only, never store raw password
   twoFactorEnabled: { type: Boolean, default: false },
 
   // Declarations

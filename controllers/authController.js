@@ -1,6 +1,33 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
 
+exports.signup= async (req,res)=> {
+
+    try{   
+
+        const {fullName, username, email, phone, dob, gender,
+            password, address, governmentID, financialInfo,
+            acceptTerms, acceptPrivacy, consentGiven } = req.body;
+
+            if(!fullname || !username || !email || !phone ){
+
+                return res.status(400).json({
+                    success: false,
+                    message: "All fields are required"
+                })
+            }
+         }catch(error){
+
+        console.log(error);
+
+        res.status(500).json({
+            success: false,
+            message: "Signup failed"
+        })
+    }
+
+}
+
 
 exports.login = async (req, res) => {
 
