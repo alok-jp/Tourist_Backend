@@ -1,4 +1,4 @@
-const jwt = require('jsonwebtoken');
+
 const User = require('../models/userModel');
 
 const bcrypt = require('bcrypt');
@@ -122,6 +122,56 @@ exports.login = async (req, res) => {
         res.status(500).json({
             success: false,
             message: "Login failed"
+        })
+    }
+}
+
+exports.update = async(req, res) => {
+
+    
+
+    try{
+
+    const { governmentID, financialInfo } = req.body;
+    const userId = req.user.id;
+
+    const user = await User.findById(userId);
+
+    if(!user){
+
+        return res.status(404).json({
+            success: false,
+            message: "User not found"
+        })
+    }
+
+    if(!governmentID){
+
+        return res.status(400).json({
+            success: false,
+            message: "Government ID is required"
+        })
+    }
+
+    user.governmentID = governmentID;
+    user.financialInfo = financialInfo;
+
+    await user.save();
+
+    return res.status(200).json({
+        success: true,
+        message: "User updated successfully",
+
+    })
+
+
+    }catch(error){
+        
+        console.log(error);
+
+        res.status(500).json({
+            success: false,
+            message: "Update failed"
         })
     }
 }

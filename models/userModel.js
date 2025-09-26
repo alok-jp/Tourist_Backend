@@ -60,6 +60,11 @@ const userSchema = new mongoose.Schema({
     taxIdNumber:   { type: String }
   },
 
+  contacts: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Contact'
+  }],
+
   // KYC Status
   kycStatus: {
     type: String,
