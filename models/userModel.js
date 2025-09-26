@@ -5,7 +5,7 @@ const userSchema = new mongoose.Schema({
   fullName: {
     first: { type: String, required: true },
     middle: { type: String },
-    last: { type: String, required: true }
+    last: { type: String, }
   },
   username: { type: String, required: true, unique: true },
   email:    { type: String, required: true, unique: true },
@@ -33,9 +33,7 @@ const userSchema = new mongoose.Schema({
       country: { type: String }
     },
     proofOfAddress: {
-      fileName: { type: String },
       fileUrl:  { type: String },
-      fileType: { type: String }
     }
   },
 
@@ -62,31 +60,16 @@ const userSchema = new mongoose.Schema({
     taxIdNumber:   { type: String }
   },
 
-  // Security
-  twoFactorEnabled: { type: Boolean, default: false },
-
-  // Declarations
-  acceptTerms:   { type: Boolean, required: true },
-  acceptPrivacy: { type: Boolean, required: true },
-  consentGiven:  { type: Boolean, required: true },
-
-  // Upload Restrictions Metadata
-  fileConstraints: {
-    maxSizeMB: { type: Number, default: 5 },
-    allowedTypes: { type: [String], default: ['jpg', 'jpeg', 'png', 'pdf'] }
-  },
-
   // KYC Status
   kycStatus: {
     type: String,
     enum: ['pending', 'verified', 'rejected'],
     default: 'pending'
   },
-  kycNotes: { type: String }, // Optional notes from reviewer/admin
+  
 
   // Timestamps
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now }
+  updatedAt: { type: Date, default: Date.now },
 });
 
-module.exports = mongoose.model('KYCUser', KYCSchema);
+module.exports = mongoose.model('User', userSchema);

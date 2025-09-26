@@ -1,32 +1,68 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
 
-exports.signup= async (req,res)=> {
+const bcrypt = require('bcrypt');
 
-    try{   
+exports.signup = async(req, res) => {
 
-        const {fullName, username, email, phone, dob, gender,
-            password, address, governmentID, financialInfo,
-            acceptTerms, acceptPrivacy, consentGiven } = req.body;
+  try {
+    const {
+      fullName,
+      username,
+      email,
+      phone,
+      dob,
+      gender,
+      password,
+      address,
+      governmentID,
+      financialInfo
+    } = req.body;
 
-            if(!fullname || !username || !email || !phone ){
+    if(!fullName || !username || !email || !phone || !dob 
+        || !gender || !password || !address || !governmentID){
 
-                return res.status(400).json({
-                    success: false,
-                    message: "All fields are required"
-                })
-            }
-         }catch(error){
+            return res.status(400).json({
+                success: false,
+                message: "All fields are required",
+            })
+        }
 
-        console.log(error);
 
-        res.status(500).json({
-            success: false,
-            message: "Signup failed"
-        })
+
+    // Check if username or email already exists
+    if (existingUser) {
+      return res.status(409).json({ error: 'User with this email or username already exists' });
     }
 
+    // Hash the password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    // Create a new user document
+    const newUser = new User({
+      fullName,
+      username,
+      email,
+      phone,
+      dob,
+      gender,
+      password: hashedPassword,   // store hashed password
+      address,
+      governmentID,
+      financialInfo,
+      updatedAt: Date.now()
+    });
+
+    await newUser.save();
+    return res.status(201).json({ message: 'User registered successfully' });
+
+  } catch (error) {
+    console.error('Signup error:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
 }
+
 
 
 exports.login = async (req, res) => {
@@ -50,7 +86,7 @@ exports.login = async (req, res) => {
         if(!user){
             return res.status(404).json({
                 success: false,
-                message: "User not foumd"
+                message: "User not found"
             })
         }
 
@@ -73,6 +109,7 @@ exports.login = async (req, res) => {
             res.cookie("token", token, options).status(200).json({
 
                 sucess: true,
+                token,
                 message: "Login successful",
             })
 
